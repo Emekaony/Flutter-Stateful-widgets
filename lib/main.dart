@@ -18,15 +18,21 @@ class _AppState extends State<App> {
   int count = 0;
 
   void incrementCount() {
-    setState(() {
-      count++;
-    });
+    // stop at 10
+    count < 10
+        ? setState(() {
+            count++;
+          })
+        : {};
   }
 
   void decrementCount() {
-    setState(() {
-      count--;
-    });
+    // do not go below 0
+    count > 0
+        ? setState(() {
+            count--;
+          })
+        : {};
   }
 
   @override
