@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const App());
@@ -17,22 +17,39 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   int count = 0;
 
-  void incrementCount() {
+  void incrementCount() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     // stop at 10
-    count < 10
-        ? setState(() {
-            count++;
-          })
-        : {};
+    setState(() {
+      if (count < 10) {
+        count++;
+      }
+    });
+    prefs.setInt('count', count);
   }
 
-  void decrementCount() {
+  void decrementCount() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     // do not go below 0
-    count > 0
-        ? setState(() {
-            count--;
-          })
-        : {};
+    setState(() {
+      if (count > 0) {
+        count--;
+      }
+    });
+    prefs.setInt('count', count);
+  }
+
+  void refreshCount() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      count = prefs.getInt('count') ?? 0;
+    });
+  }
+
+  @override
+  void initState() {
+    refreshCount();
+    super.initState();
   }
 
   @override
